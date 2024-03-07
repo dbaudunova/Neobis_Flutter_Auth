@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/elevated_button_style_widget.dart';
 import '../widgets/gesture_gradient_text_widget.dart';
 import '../widgets/gesture_text_widget.dart';
 import '../widgets/privacy_policy_text_widget.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class SignUp extends StatelessWidget {
+  const SignUp({super.key});
 
-  @override
-  State<SignIn> createState() => _SignInState();
-}
-
-class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,18 +19,18 @@ class _SignInState extends State<SignIn> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(32, 60, 0, 0),
-                child: GestureGradientText(
+                child: GestureText(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   text: 'Sign In',
-                  onTap: () {},
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 32),
-                child: GestureText(
+                child: GestureGradientText(
+                  onTap: () {},
                   text: 'Sign Up',
-                  onTap: () {
-                    Navigator.pushNamed(context, 'sign_up');
-                  },
                 ),
               ),
               Column(
@@ -82,20 +78,27 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                   ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 16, 32, 0),
-                        child: Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(32, 24, 32, 0),
+                    child: Form(
+                      child: TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          hintText: 'Verify Password',
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(50.0)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(50.0)),
+                          contentPadding: const EdgeInsets.only(left: 24),
+                          hintStyle: const TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
-                      )
-                    ],
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
@@ -103,7 +106,7 @@ class _SignInState extends State<SignIn> {
                       width: 260,
                       height: 50,
                       child: ElevatedButtonStyle(
-                        text: 'Sign In',
+                        text: 'Sign Up',
                         onPressed: () {},
                       ),
                     ),
