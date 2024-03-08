@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neobis_flutter_auth/widgets/text_form_field_style_widget.dart';
 import '../widgets/elevated_button_style_widget.dart';
 import '../widgets/gesture_gradient_text_widget.dart';
 import '../widgets/gesture_text_widget.dart';
@@ -12,6 +13,18 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final _loginKey = GlobalKey<FormState>();
+  final _passwordKey = GlobalKey<FormState>();
+  final TextEditingController loginController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    loginController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,43 +55,24 @@ class _SignInState extends State<SignIn> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(32, 100, 32, 0),
                     child: Form(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Login',
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(50.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0)),
-                          contentPadding: const EdgeInsets.only(left: 24),
-                          hintStyle: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
+                      key: _loginKey,
+                      child: TextFormFieldStyle(
+                        controller: loginController,
+                        hintText: 'Login',
+                        obscureText: false,
+                        validator: (val) {},
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(32, 24, 32, 0),
                     child: Form(
-                      child: TextFormField(
+                      key: _passwordKey,
+                      child: TextFormFieldStyle(
                         obscureText: true,
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(50.0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(50.0)),
-                          contentPadding: const EdgeInsets.only(left: 24),
-                          hintStyle: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
+                        hintText: 'Password',
+                        controller: passwordController,
+                        validator: (val) {},
                       ),
                     ),
                   ),
