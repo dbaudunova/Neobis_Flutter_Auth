@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:neobis_flutter_auth/pages/sign_in.dart';
-import 'package:neobis_flutter_auth/pages/sign_up.dart';
+import 'package:neobis_flutter_auth/presentation/pages/home.dart';
+import 'package:neobis_flutter_auth/presentation/pages/sign_in.dart';
+import 'package:neobis_flutter_auth/presentation/pages/sign_up.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,7 @@ void main() {
       routes: {
         'sign_in': (context) => const SignIn(),
         'sign_up': (context) => const SignUp(),
+        'home': (context) => const Home(),
       },
     ),
   );

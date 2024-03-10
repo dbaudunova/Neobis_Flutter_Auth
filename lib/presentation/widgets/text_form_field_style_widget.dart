@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextFormFieldStyle extends StatelessWidget {
   const TextFormFieldStyle({
     super.key,
     required this.hintText,
-    required this.controller,
+    this.controller,
     required this.validator,
-    required this.obscureText,
+    this.obscureText,
   });
 
   final String hintText;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool? obscureText;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'\s'))
+      ],
       validator: validator,
       controller: controller,
       obscureText: obscureText ?? false,
