@@ -28,7 +28,6 @@ class _SignUpState extends State<SignUp> {
     var prefs = await SharedPreferences.getInstance();
     prefs.setString(KeyStore.userLogin, loginController.text);
     prefs.setString(KeyStore.userPassword, passwordController.text);
-    userList.add(loginController.text);
     await prefs.setStringList(KeyStore.userList, userList);
   }
 
@@ -41,10 +40,10 @@ class _SignUpState extends State<SignUp> {
     const snackBar =
     SnackBar(content: Text('Registration completed successfully'));
     if (_formKey.currentState!.validate()) {
+      await _setUserData();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       Navigator.pushNamed(context, 'sign_in');
     }
-    await _setUserData();
   }
 
   @override
