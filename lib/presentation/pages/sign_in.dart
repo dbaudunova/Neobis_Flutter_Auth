@@ -24,6 +24,15 @@ class _SignInState extends State<SignIn> {
     _prefs = await SharedPreferences.getInstance();
   }
 
+  void _navigation(context) {
+    const snackBar = SnackBar(
+      content: Text('Authorization completed successfully'),
+      backgroundColor: Colors.green,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Navigator.pushReplacementNamed(context, 'home');
+  }
+
   String? _loginAndPasswordCorrection(String? val) {
     _login = _loginController.text;
     _password = _passwordController.text;
@@ -126,7 +135,7 @@ class _SignInState extends State<SignIn> {
                       text: 'Sign In',
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          Navigator.pushReplacementNamed(context, 'home');
+                          _navigation(context);
                         }
                       },
                     ),

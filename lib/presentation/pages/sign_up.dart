@@ -27,8 +27,10 @@ class _SignUpState extends State<SignUp> {
   Future<void> _setData(context) async {
     final login = _loginController.text;
     final password = _passwordController.text;
-    const snackBar =
-        SnackBar(content: Text('Registration completed successfully'));
+    const snackBar = SnackBar(
+      content: Text('Registration completed successfully'),
+      backgroundColor: Colors.green,
+    );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
     await _saveCredentials(login, password);
     Navigator.pushNamed(context, 'sign_in');
