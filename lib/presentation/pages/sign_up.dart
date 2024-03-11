@@ -27,13 +27,14 @@ class _SignUpState extends State<SignUp> {
   Future<void> _setData(context) async {
     final login = _loginController.text;
     final password = _passwordController.text;
-    const snackBar = SnackBar(content: Text('Registration completed successfully'));
+    const snackBar =
+        SnackBar(content: Text('Registration completed successfully'));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    await _saveLoginCredentials(login, password);
+    await _saveCredentials(login, password);
     Navigator.pushNamed(context, 'sign_in');
   }
 
-  Future<void> _saveLoginCredentials(String username, String password) async {
+  Future<void> _saveCredentials(String username, String password) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(username, password);
   }
@@ -99,62 +100,62 @@ class _SignUpState extends State<SignUp> {
                   text: 'Sign Up',
                 ),
               ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32, 100, 32, 0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(children: [
-                        TextFormFieldStyle(
-                          hintText: 'Login',
-                          controller: _loginController,
-                          validator: (val) {
-                            return _nameValidate(val);
-                          },
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 24)),
-                        TextFormFieldStyle(
-                          controller: _passwordController,
-                          obscureText: true,
-                          hintText: 'Password',
-                          validator: (val) {
-                            return _passwordValidate(val);
-                          },
-                        ),
-                        const Padding(padding: EdgeInsets.only(top: 24)),
-                        TextFormFieldStyle(
-                          controller: _verifyPasswordController,
-                          obscureText: true,
-                          hintText: 'Verify Password',
-                          validator: (val) {
-                            return _passwordValidate(val);
-                          },
-                        ),
-                      ]),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(32, 100, 32, 0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(children: [
+                    TextFormFieldStyle(
+                      hintText: 'Login',
+                      controller: _loginController,
+                      validator: (val) {
+                        return _nameValidate(val);
+                      },
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 24)),
+                    TextFormFieldStyle(
+                      controller: _passwordController,
+                      obscureText: true,
+                      hintText: 'Password',
+                      validator: (val) {
+                        return _passwordValidate(val);
+                      },
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 24)),
+                    TextFormFieldStyle(
+                      controller: _verifyPasswordController,
+                      obscureText: true,
+                      hintText: 'Verify Password',
+                      validator: (val) {
+                        return _passwordValidate(val);
+                      },
+                    ),
+                  ]),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Center(
+                  child: SizedBox(
+                    width: 260,
+                    height: 50,
+                    child: ElevatedButtonStyle(
+                      text: 'Sign Up',
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _setData(context);
+                        }
+                      },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: SizedBox(
-                      width: 260,
-                      height: 50,
-                      child: ElevatedButtonStyle(
-                        text: 'Sign Up',
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _setData(context);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: PrivacyPolicyText(),
-                  ),
-                ],
-              )
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 60),
+                child: Center(
+                  child: PrivacyPolicyText(),
+                ),
+              ),
             ],
           ),
         ),

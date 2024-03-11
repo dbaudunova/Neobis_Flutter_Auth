@@ -75,70 +75,70 @@ class _SignInState extends State<SignIn> {
                   },
                 ),
               ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(32, 100, 32, 0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormFieldStyle(
-                            hintText: 'Login',
-                            controller: _loginController,
-                            validator: (val) {
-                              return _loginAndPasswordCorrection(val);
-                            },
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 24)),
-                          TextFormFieldStyle(
-                            controller: _passwordController,
-                            obscureText: true,
-                            hintText: 'Password',
-                            validator: (val) {
-                              return _loginAndPasswordCorrection(val);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(32, 100, 32, 0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
                     children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 16, 32, 0),
-                        child: Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: SizedBox(
-                      width: 260,
-                      height: 50,
-                      child: ElevatedButtonStyle(
-                        text: 'Sign In',
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            Navigator.pushReplacementNamed(context, 'home');
-                          }
+                      TextFormFieldStyle(
+                        hintText: 'Login',
+                        controller: _loginController,
+                        validator: (val) {
+                          return _loginAndPasswordCorrection(val);
                         },
                       ),
+                      const Padding(padding: EdgeInsets.only(top: 24)),
+                      TextFormFieldStyle(
+                        controller: _passwordController,
+                        obscureText: true,
+                        hintText: 'Password',
+                        validator: (val) {
+                          return _loginAndPasswordCorrection(val);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 16, 32, 0),
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Center(
+                  child: SizedBox(
+                    width: 260,
+                    height: 50,
+                    child: ElevatedButtonStyle(
+                      text: 'Sign In',
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.pushReplacementNamed(context, 'home');
+                        }
+                      },
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: PrivacyPolicyText(),
-                  ),
-                ],
-              )
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 60),
+                child: Center(
+                  child: PrivacyPolicyText(),
+                ),
+              ),
             ],
           ),
         ),
