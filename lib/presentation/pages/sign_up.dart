@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neobis_flutter_auth/data/key_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/elevated_button_style_widget.dart';
 import '../widgets/gesture_gradient_text_widget.dart';
@@ -15,49 +14,64 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  List<String> userList = [];
-
+  late SharedPreferences _prefs;
   final _formKey = GlobalKey<FormState>();
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _verifyPasswordController = TextEditingController();
 
-  final TextEditingController loginController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController verifyPasswordController =
-  TextEditingController();
-
-  Future _setUserData() async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setString(KeyStore.userLogin, loginController.text);
-    prefs.setString(KeyStore.userPassword, passwordController.text);
-    await prefs.setStringList(KeyStore.userList, userList);
+  Future<void> _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  Future _getUserList() async {
-    var prefs = await SharedPreferences.getInstance();
-    userList = prefs.getStringList(KeyStore.userList) ?? [];
+  Future<void> _setData(context) async {
+    final login = _loginController.text;
+    final password = _passwordController.text;
+    const snackBar = SnackBar(content: Text('Registration completed successfully'));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    await _saveLoginCredentials(login, password);
+    Navigator.pushNamed(context, 'sign_in');
   }
 
-  void _register(context) async {
-    const snackBar =
-    SnackBar(content: Text('Registration completed successfully'));
-    if (_formKey.currentState!.validate()) {
-      await _setUserData();
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.pushNamed(context, 'sign_in');
+  Future<void> _saveLoginCredentials(String username, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(username, password);
+  }
+
+  String? _nameValidate(String? value) {
+    final login = _loginController.text;
+    if (value!.isEmpty) {
+      return 'Please enter your login';
+    } else if (_prefs.containsKey(login)) {
+      return 'This user already exists';
     }
+    return null;
+  }
+
+  String? _passwordValidate(String? val) {
+    if (val!.isEmpty) {
+      return 'Please enter your password';
+    } else if (val.length < 4) {
+      return 'Password must contain more than 4 symbols';
+    } else if (val != _verifyPasswordController.text ||
+        val != _passwordController.text) {
+      return 'Password mismatch';
+    }
+    return null;
   }
 
   @override
   void dispose() {
-    loginController.dispose();
-    passwordController.dispose();
-    verifyPasswordController.dispose();
+    _loginController.dispose();
+    _passwordController.dispose();
+    _verifyPasswordController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _getUserList();
+    _initPrefs();
   }
 
   @override
@@ -94,47 +108,27 @@ class _SignUpState extends State<SignUp> {
                       child: Column(children: [
                         TextFormFieldStyle(
                           hintText: 'Login',
-                          controller: loginController,
+                          controller: _loginController,
                           validator: (val) {
-                            if (val!.isEmpty) {
-                              return 'Please enter your login';
-                            } else if (userList.contains(val)) {
-                              loginController.clear();
-                              return 'This user already exists';
-                            }
-                            return null;
+                            return _nameValidate(val);
                           },
                         ),
                         const Padding(padding: EdgeInsets.only(top: 24)),
                         TextFormFieldStyle(
-                          controller: passwordController,
+                          controller: _passwordController,
                           obscureText: true,
                           hintText: 'Password',
                           validator: (val) {
-                            if (val!.isEmpty) {
-                              return 'Please enter your password';
-                            } else if (val.length < 4) {
-                              passwordController.clear();
-                              return 'Password must contain more than 4 symbols';
-                            }
-                            return null;
+                            return _passwordValidate(val);
                           },
                         ),
                         const Padding(padding: EdgeInsets.only(top: 24)),
                         TextFormFieldStyle(
-                          controller: verifyPasswordController,
+                          controller: _verifyPasswordController,
                           obscureText: true,
                           hintText: 'Verify Password',
                           validator: (val) {
-                            if (val!.isEmpty) {
-                              return 'Please repeat your password';
-                            } else if (val.length < 4) {
-                              passwordController.clear();
-                              return 'Password must contain more than 4 symbols';
-                            } else if (val != passwordController.text) {
-                              return 'Password mismatch';
-                            }
-                            return null;
+                            return _passwordValidate(val);
                           },
                         ),
                       ]),
@@ -148,7 +142,9 @@ class _SignUpState extends State<SignUp> {
                       child: ElevatedButtonStyle(
                         text: 'Sign Up',
                         onPressed: () {
-                          _register(context);
+                          if (_formKey.currentState!.validate()) {
+                            _setData(context);
+                          }
                         },
                       ),
                     ),

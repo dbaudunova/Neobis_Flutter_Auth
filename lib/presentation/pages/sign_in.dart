@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neobis_flutter_auth/data/key_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/elevated_button_style_widget.dart';
 import '../widgets/gesture_gradient_text_widget.dart';
@@ -15,28 +14,40 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  String? login, password;
+  late SharedPreferences _prefs;
+  String? _login, _password;
   final _formKey = GlobalKey<FormState>();
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  void _authorization(context) async {
-    const snackBar =
-    SnackBar(content: Text('Authorization completed successfully'));
-    if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      Navigator.pushReplacementNamed(context, 'home');
-    }
+  Future<void> _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  Future _getUserData() async {
-    var prefs = await SharedPreferences.getInstance();
-    login = prefs.getString(KeyStore.userLogin) ?? '';
-    password = prefs.getString(KeyStore.userPassword) ?? '';
+  String? _loginAndPasswordCorrection(String? val) {
+    _login = _loginController.text;
+    _password = _passwordController.text;
+    if (val!.isEmpty) {
+      return 'Please enter your credentials';
+    } else if (!_prefs.containsKey(_login!)) {
+      return 'User does not exist';
+    } else if (_prefs.getString(_login!) != _password) {
+      return 'Incorrect login or password';
+    }
+    return null;
   }
 
   @override
   void initState() {
     super.initState();
-    _getUserData();
+    _initPrefs();
+  }
+
+  @override
+  void dispose() {
+    _loginController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -74,26 +85,18 @@ class _SignInState extends State<SignIn> {
                         children: [
                           TextFormFieldStyle(
                             hintText: 'Login',
+                            controller: _loginController,
                             validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Please enter your login';
-                              } else if (val != login) {
-                                return 'Incorrect login';
-                              }
-                              return null;
+                              return _loginAndPasswordCorrection(val);
                             },
                           ),
                           const Padding(padding: EdgeInsets.only(top: 24)),
                           TextFormFieldStyle(
+                            controller: _passwordController,
                             obscureText: true,
                             hintText: 'Password',
                             validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Please enter your password';
-                              } else if (val != password) {
-                                return 'Incorrect password';
-                              }
-                              return null;
+                              return _loginAndPasswordCorrection(val);
                             },
                           ),
                         ],
@@ -123,7 +126,9 @@ class _SignInState extends State<SignIn> {
                       child: ElevatedButtonStyle(
                         text: 'Sign In',
                         onPressed: () {
-                          _authorization(context);
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.pushReplacementNamed(context, 'home');
+                          }
                         },
                       ),
                     ),
